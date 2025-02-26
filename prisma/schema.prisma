@@ -1,0 +1,193 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model master_blood {
+  id_b     Int        @id @default(autoincrement())
+  b_name   String     @db.VarChar(5)
+  b_active Boolean    @default(true)
+  patients patients[]
+}
+
+model medical_agreement {
+  id_ma                                            Int        @id
+  ma_name                                          String?    @db.VarChar(120)
+  fk_insert_user                                   Int
+  fk_last_update_user                              Int?
+  last_date_update                                 DateTime?  @db.Timestamp(0)
+  dt_create                                        DateTime?  @default(now()) @db.Timestamp(0)
+  user_medical_agreement_fk_insert_userTouser      user       @relation("medical_agreement_fk_insert_userTouser", fields: [fk_insert_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medical_agreement_ibfk_1")
+  user_medical_agreement_fk_last_update_userTouser user?      @relation("medical_agreement_fk_last_update_userTouser", fields: [fk_last_update_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medical_agreement_ibfk_2")
+  patients                                         patients[]
+
+  @@index([fk_insert_user], map: "fk_insert_user")
+  @@index([fk_last_update_user], map: "fk_last_update_user")
+}
+
+model medicine_manufacturer {
+  id_mm                                                Int                 @id @default(autoincrement())
+  m_name                                               String              @db.VarChar(120)
+  cnpj                                                 String?             @db.VarChar(30)
+  fk_insert_user                                       Int
+  dt_create                                            DateTime?           @default(now()) @db.Timestamp(0)
+  fk_last_update_user                                  Int?
+  dt_last_update                                       DateTime?           @db.Timestamp(0)
+  user_medicine_manufacturer_fk_insert_userTouser      user                @relation("medicine_manufacturer_fk_insert_userTouser", fields: [fk_insert_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medicine_manufacturer_ibfk_1")
+  user_medicine_manufacturer_fk_last_update_userTouser user?               @relation("medicine_manufacturer_fk_last_update_userTouser", fields: [fk_last_update_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medicine_manufacturer_ibfk_2")
+  medicine_products                                    medicine_products[]
+
+  @@index([fk_insert_user], map: "fk_insert_user")
+  @@index([fk_last_update_user], map: "fk_last_update_user")
+}
+
+model medicine_products {
+  id_mp                                       Int                                             @id @default(autoincrement())
+  mp_name                                     String                                          @db.VarChar(255)
+  category                                    medicine_products_category?
+  distribution_unit_of_measure                medicine_products_distribution_unit_of_measure?
+  quantity_per_measure                        Decimal                                         @db.Decimal(10, 3)
+  current_stock                               Int
+  reserved_stock                              Int
+  min_stock_level                             Int
+  fk_medicine_manufacturer                    Int
+  fk_insert_user                              Int
+  dt_create                                   DateTime?                                       @default(now()) @db.Timestamp(0)
+  fk_update_user                              Int
+  dt_last_update                              DateTime?                                       @db.Timestamp(0)
+  medicine_manufacturer                       medicine_manufacturer                           @relation(fields: [fk_medicine_manufacturer], references: [id_mm], onDelete: NoAction, onUpdate: NoAction, map: "medicine_products_ibfk_1")
+  user_medicine_products_fk_insert_userTouser user                                            @relation("medicine_products_fk_insert_userTouser", fields: [fk_insert_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medicine_products_ibfk_2")
+  user_medicine_products_fk_update_userTouser user                                            @relation("medicine_products_fk_update_userTouser", fields: [fk_update_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medicine_products_ibfk_3")
+  moving_products                             moving_products[]
+
+  @@unique([mp_name, fk_medicine_manufacturer, distribution_unit_of_measure], map: "mp_name")
+  @@index([fk_insert_user], map: "fk_insert_user")
+  @@index([fk_medicine_manufacturer], map: "fk_medicine_manufacturer")
+  @@index([fk_update_user], map: "fk_update_user")
+}
+
+model moving_products {
+  id_mov                 Int                      @id @default(autoincrement())
+  fk_id_product          Int
+  fk_requester_id_user   Int
+  fk_destination_patient String                   @db.VarChar(36)
+  qty                    Decimal                  @db.Decimal(10, 3)
+  type                   moving_products__type?   @map("_type")
+  status                 moving_products__status? @map("_status")
+  status_updated_at      DateTime?                @db.Timestamp(0)
+  medicine_products      medicine_products        @relation(fields: [fk_id_product], references: [id_mp], onDelete: NoAction, onUpdate: NoAction, map: "moving_products_ibfk_1")
+  user                   user                     @relation(fields: [fk_requester_id_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "moving_products_ibfk_2")
+  patients               patients                 @relation(fields: [fk_destination_patient], references: [id_p], onDelete: NoAction, onUpdate: NoAction, map: "moving_products_ibfk_3")
+
+  @@index([fk_destination_patient], map: "fk_destination_patient")
+  @@index([fk_id_product], map: "fk_id_product")
+  @@index([fk_requester_id_user], map: "fk_requester_id_user")
+}
+
+model patients {
+  id_p                                    String               @id @db.VarChar(36)
+  p_name                                  String               @db.VarChar(120)
+  sex                                     patients_sex?
+  cpf                                     String               @unique(map: "unique_cpf") @db.VarChar(11)
+  rg                                      String               @unique(map: "unique_rg") @db.VarChar(20)
+  fk_type_blood                           Int
+  fk_medical_agreement                    Int?
+  fk_insert_user                          Int
+  fk_last_update_user                     Int?
+  medical_agreement_number                String?              @db.VarChar(45)
+  last_date_update                        DateTime?            @db.Timestamp(0)
+  dt_create                               DateTime?            @default(now()) @db.Timestamp(0)
+  email                                   String               @db.VarChar(120)
+  moving_products                         moving_products[]
+  user_patients_fk_insert_userTouser      user                 @relation("patients_fk_insert_userTouser", fields: [fk_insert_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "patients_ibfk_1")
+  user_patients_fk_last_update_userTouser user?                @relation("patients_fk_last_update_userTouser", fields: [fk_last_update_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "patients_ibfk_2")
+  master_blood                            master_blood         @relation(fields: [fk_type_blood], references: [id_b], onDelete: NoAction, onUpdate: NoAction, map: "patients_ibfk_3")
+  medical_agreement                       medical_agreement?   @relation(fields: [fk_medical_agreement], references: [id_ma], onDelete: NoAction, onUpdate: NoAction, map: "patients_ibfk_4")
+  patients_address                        patients_address?
+  patients_telephone                      patients_telephone[]
+
+  @@index([fk_insert_user], map: "fk_insert_user")
+  @@index([fk_last_update_user], map: "fk_last_update_user")
+  @@index([fk_medical_agreement], map: "fk_medical_agreement")
+  @@index([fk_type_blood], map: "fk_type_blood")
+}
+
+model patients_address {
+  fk_id_pa     String   @id @db.VarChar(36)
+  zip_code     String?  @db.VarChar(45)
+  street       String?  @db.VarChar(80)
+  complement   String?  @db.VarChar(80)
+  unit         String?  @db.VarChar(80)
+  neighborhood String?  @db.VarChar(80)
+  city         String?  @db.VarChar(80)
+  state_abbr   String?  @db.VarChar(80)
+  state        String?  @db.VarChar(80)
+  region       String?  @db.VarChar(80)
+  description  String?  @map("_description") @db.VarChar(80)
+  patients     patients @relation(fields: [fk_id_pa], references: [id_p], onDelete: NoAction, onUpdate: NoAction, map: "patients_address_ibfk_1")
+}
+
+model patients_telephone {
+  fk_id_p     String   @db.VarChar(36)
+  tell        String   @db.VarChar(20)
+  description String?  @db.VarChar(80)
+  patients    patients @relation(fields: [fk_id_p], references: [id_p], onDelete: NoAction, onUpdate: NoAction, map: "patients_telephone_ibfk_1")
+
+  @@unique([fk_id_p, tell], map: "fk_id_p")
+}
+
+model user {
+  id_u                                                                  Int                     @id @default(autoincrement())
+  u_name                                                                String                  @db.VarChar(120)
+  cpf                                                                   String                  @unique(map: "cpf") @db.VarChar(11)
+  password                                                              String                  @db.VarChar(80)
+  dt_create                                                             DateTime                @default(now()) @db.Timestamp(0)
+  medical_agreement_medical_agreement_fk_insert_userTouser              medical_agreement[]     @relation("medical_agreement_fk_insert_userTouser")
+  medical_agreement_medical_agreement_fk_last_update_userTouser         medical_agreement[]     @relation("medical_agreement_fk_last_update_userTouser")
+  medicine_manufacturer_medicine_manufacturer_fk_insert_userTouser      medicine_manufacturer[] @relation("medicine_manufacturer_fk_insert_userTouser")
+  medicine_manufacturer_medicine_manufacturer_fk_last_update_userTouser medicine_manufacturer[] @relation("medicine_manufacturer_fk_last_update_userTouser")
+  medicine_products_medicine_products_fk_insert_userTouser              medicine_products[]     @relation("medicine_products_fk_insert_userTouser")
+  medicine_products_medicine_products_fk_update_userTouser              medicine_products[]     @relation("medicine_products_fk_update_userTouser")
+  moving_products                                                       moving_products[]
+  patients_patients_fk_insert_userTouser                                patients[]              @relation("patients_fk_insert_userTouser")
+  patients_patients_fk_last_update_userTouser                           patients[]              @relation("patients_fk_last_update_userTouser")
+}
+
+enum patients_sex {
+  M
+  F
+}
+
+enum medicine_products_category {
+  medicamento
+  limpeza
+  insumos
+}
+
+enum medicine_products_distribution_unit_of_measure {
+  micrograma
+  miligrama
+  gramas
+  mililitro
+  gotas
+  microgotas
+  unidade
+  litro
+  quilograma
+  comprimidos
+}
+
+enum moving_products__type {
+  input
+  output
+}
+
+enum moving_products__status {
+  pending
+  success
+  cancelled
+}
