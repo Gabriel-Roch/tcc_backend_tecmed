@@ -7,8 +7,8 @@ import { master_blood } from "@prisma/client";
 export class MasterBloodService {
 
     constructor(private prisma: PrismaService) { }
-
-    async getAllMasters(): Promise<master_blood[]> {
+    
+    async getAll(): Promise<master_blood[]> {
         try {
             return await this.prisma.master_blood.findMany({
                 where: {

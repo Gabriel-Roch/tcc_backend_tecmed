@@ -1,21 +1,23 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { BloodController } from './controller/blood.controller';
 import { MasterBloodService } from './services/masterBlood.service';
 import { PrismaService } from './services/prisma.service';
+import { PatientController } from './controller/patient.controller';
+import { PatientService } from './services/patient.service';
+import { IndexController } from './controller/index.controller';
 
 
 @Module({
   imports: [],
   controllers: [
-    AppController,
-    BloodController
+    BloodController,
+    PatientController,
+    IndexController
   ],
   providers: [
-    AppService,
     MasterBloodService,
-    PrismaService
+    PrismaService,
+    PatientService
   ],
 })
 export class AppModule { }
