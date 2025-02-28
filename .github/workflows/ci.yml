@@ -1,33 +1,55 @@
+# name: Jenkins Trigger Job
+
+# on:
+#   push:
+#     branches:
+#       - main  
+
+# jobs:
+#   trigger-jenkins-job:
+#     runs-on: ubuntu-latest 
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2  
+
+#       - name: Install jq
+#         run: sudo apt-get install -y jq  
+
+#       - name: Get CSRF Crumb from Jenkins
+#         id: get-crumb
+#         run: |
+#           # Obter o CSRF crumb
+#           CRUMB=$(curl -u "${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_PASSWORD }}" \
+#                   -s "http://191.101.78.132:8080/crumbIssuer/api/json" | jq -r '.crumbRequestField + ":" + .crumb')
+#           echo "CRUMB=$CRUMB" >> $GITHUB_ENV
+
+#       - name: Send HTTP POST to Jenkins with CSRF Crumb
+#         run: |
+#           curl -X POST "http://191.101.78.132:8080/job/backend_tecmed/build/WithParameters?token=rochaCorporation" \
+#                -H "$CRUMB" \
+#                -u "${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_PASSWORD }}" \
+#                --data "username=${{ secrets.JENKINS_USERNAME }}" \
+#                --data "password=${{ secrets.JENKINS_PASSWORD }}"
+
+
 name: Jenkins Trigger Job
 
 on:
   push:
     branches:
-      - main  # O workflow será acionado quando houver um push no branch main
+      - main  
 
 jobs:
   trigger-jenkins-job:
-    runs-on: ubuntu-latest  # Executa o job no Ubuntu
+    runs-on: ubuntu-latest 
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2  # Faz o checkout do código
-
-      - name: Install jq
-        run: sudo apt-get install -y jq  # Instala o jq para processar JSON
-
-      - name: Get CSRF Crumb from Jenkins
-        id: get-crumb
-        run: |
-          # Obter o CSRF crumb
-          CRUMB=$(curl -u "${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_PASSWORD }}" \
-                  -s "http://191.101.78.132:8080/crumbIssuer/api/json" | jq -r '.crumbRequestField + ":" + .crumb')
-          echo "CRUMB=$CRUMB" >> $GITHUB_ENV
-
-      - name: Send HTTP POST to Jenkins with CSRF Crumb
-        run: |
-          curl -X POST "http://191.101.78.132:8080/job/backend_tecmed/build/WithParameters?token=rochaCorporation" \
-               -H "$CRUMB" \
-               -u "${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_PASSWORD }}" \
-               --data "username=${{ secrets.JENKINS_USERNAME }}" \
-               --data "password=${{ secrets.JENKINS_PASSWORD }}"
+      - name: Trigger Jenkins Job
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'http://191.101.78.132:8080/job/backend_tecmed/build/WithParameters?token=rochaCorporation'
+          method: 'POST'
+          username: ${{ secrets.JENKINS_USERNAME }}
+          password: ${{ secrets.JENKINS_PASSWORD }}
+          customHeaders: '{"Content-Type": "application/x-www-form-urlencoded"}'
