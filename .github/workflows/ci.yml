@@ -3,21 +3,29 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - main  
+      - main  # O workflow será acionado quando houver um push no branch main
 
 jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]  
-    runs-on: ${{ matrix.os }}  
+        os: [ubuntu-latest, windows-latest, macos-latest]  # Lista de sistemas operacionais para execução paralela
+    runs-on: ${{ matrix.os }}  # Cada job será executado nos diferentes sistemas operacionais da matriz
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2  # Faz o checkout do código
 
-      - name: Send HTTP POST to Jenkins using curl
+      - name: Get CSRF Crumb from Jenkins
+        run: |
+          # Obter o CSRF crumb
+          CRUMB=$(curl -u ${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_PASSWORD }} \
+                  -s "http://191.101.78.132:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)")
+          echo "CRUMB=$CRUMB" >> $GITHUB_ENV
+
+      - name: Send HTTP POST to Jenkins with CSRF Crumb
         run: |
           curl -X POST "http://191.101.78.132:8080/job/backend_tecmed/build/WithParameters?token=rochaCorporation" \
+               -H "$CRUMB" \
                --data "username=${{ secrets.JENKINS_USERNAME }}" \
                --data "password=${{ secrets.JENKINS_PASSWORD }}"
