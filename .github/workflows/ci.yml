@@ -14,13 +14,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2 
+        uses: actions/checkout@v2  # Faz o checkout do código
 
-      - name: Send HTTP POST to Jenkins
-        uses: jakejarvis/http-request-action@v1.0.0  
-        with:
-          url: "http://191.101.78.132:8080/job/backend_tecmed/build/WithParameters?token=rochaCorporation"
-          method: "POST"
-          data: |
-            username=${{ secrets.JENKINS_USERNAME }}  # Usando variáveis secretas
-            password=${{ secrets.JENKINS_PASSWORD }}  # Usando variáveis secretas
+      - name: Send HTTP POST to Jenkins using curl
+        run: |
+          curl -X POST "http://191.101.78.132:8080/job/backend_tecmed/build/WithParameters?token=rochaCorporation" \
+               --data "username=${{ secrets.JENKINS_USERNAME }}" \
+               --data "password=${{ secrets.JENKINS_PASSWORD }}"
