@@ -1,9 +1,5 @@
 FROM node:18-alpine
 
-ARG URL_DATABASE
-
-ENV PRISMA_URL_DATABASE=${PRISMA_URL_DATABASE}
-
 RUN mkdir -p /app
 WORKDIR /app
 COPY . /app
