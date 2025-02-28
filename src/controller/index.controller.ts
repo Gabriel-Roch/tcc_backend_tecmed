@@ -6,6 +6,6 @@ export class IndexController{
 
     @Get()
     index(){
-        return "build git actions"
+        return "build git actions 2"
     }
 }
