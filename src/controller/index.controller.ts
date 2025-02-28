@@ -6,6 +6,6 @@ export class IndexController{
 
     @Get()
     index(){
-        return process.env.NAME_SYSTEM
+        return "build git actions"
     }
 }
