@@ -1,0 +1,26 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest] 
+    runs-on: ${{ matrix.os }}
+
+steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Send HTTP POST to Jenkins
+      uses: jakejarvis/http-request-action@v1.0.0
+      with:
+        url: "http://191.101.78.132:8080/job/backend_tecmed/build/WithParameters?token=rochaCorporation"
+        method: "POST"
+        data: |
+          username=${{ secrets.JENKINS_USERNAME }}
+          password=${{ secrets.JENKINS_PASSWORD }}
