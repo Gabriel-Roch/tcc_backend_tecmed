@@ -9,7 +9,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]  # Lista de sistemas operacionais para execução paralela
+        os: [ubuntu-latest, macos-latest]  # Lista de sistemas operacionais para execução paralela
     runs-on: ${{ matrix.os }}  # Cada job será executado nos diferentes sistemas operacionais da matriz
 
     steps:
