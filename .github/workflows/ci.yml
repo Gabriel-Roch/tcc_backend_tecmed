@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: Jenkins Trigger Job
 
 on:
   push:
@@ -6,26 +6,28 @@ on:
       - main  # O workflow será acionado quando houver um push no branch main
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]  # Lista de sistemas operacionais para execução paralela
-    runs-on: ${{ matrix.os }}  # Cada job será executado nos diferentes sistemas operacionais da matriz
+  trigger-jenkins-job:
+    runs-on: ubuntu-latest  # Executa o job no Ubuntu
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2  # Faz o checkout do código
 
+      - name: Install jq
+        run: sudo apt-get install -y jq  # Instala o jq para processar JSON
+
       - name: Get CSRF Crumb from Jenkins
+        id: get-crumb
         run: |
           # Obter o CSRF crumb
-          CRUMB=$(curl -u ${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_PASSWORD }} \
-                  -s "http://191.101.78.132:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)")
+          CRUMB=$(curl -u "${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_PASSWORD }}" \
+                  -s "http://191.101.78.132:8080/crumbIssuer/api/json" | jq -r '.crumbRequestField + ":" + .crumb')
           echo "CRUMB=$CRUMB" >> $GITHUB_ENV
 
       - name: Send HTTP POST to Jenkins with CSRF Crumb
         run: |
           curl -X POST "http://191.101.78.132:8080/job/backend_tecmed/build/WithParameters?token=rochaCorporation" \
                -H "$CRUMB" \
+               -u "${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_PASSWORD }}" \
                --data "username=${{ secrets.JENKINS_USERNAME }}" \
                --data "password=${{ secrets.JENKINS_PASSWORD }}"
