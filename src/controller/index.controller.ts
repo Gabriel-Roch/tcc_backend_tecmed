@@ -6,6 +6,6 @@ export class IndexController{
 
     @Get()
     index(){
-        return "OK"
+        return process.env.NAME_SYSTEM
     }
 }
