@@ -5,6 +5,8 @@ import { PrismaService } from './services/prisma.service';
 import { PatientController } from './controller/patient.controller';
 import { PatientService } from './services/patient.service';
 import { IndexController } from './controller/index.controller';
+import { UserController } from './controller/user.controller';
+import { UserService } from './services/user.service';
 
 
 @Module({
@@ -12,12 +14,14 @@ import { IndexController } from './controller/index.controller';
   controllers: [
     BloodController,
     PatientController,
-    IndexController
+    IndexController,
+    UserController
   ],
   providers: [
     MasterBloodService,
     PrismaService,
-    PatientService
+    PatientService,
+    UserService
   ],
 })
 export class AppModule { }
