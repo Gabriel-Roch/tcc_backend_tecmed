@@ -10,7 +10,7 @@ export class ZodValidationPipe implements PipeTransform {
             if (!parsedValue.success) {
                 throw new HttpException(parsedValue.error.errors, HttpStatus.BAD_REQUEST)
             }
-            return parsedValue
+            return parsedValue.data
         } catch (error) {
             throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
         }

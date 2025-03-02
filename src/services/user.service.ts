@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import {  user } from "@prisma/client";
+import { user } from "@prisma/client";
 import { InewUser, IupdateUser } from "../models/user.model";
 import { generateHashMd5 } from "../utils/passwordCrypto";
 import { PrismaService } from "./prisma.service";
@@ -20,14 +20,16 @@ export class UserService {
 
     async newUser(data: InewUser): Promise<void> {
         try {
+
             await this.prisma.user.create({
                 data: {
                     u_name: data.name,
                     cpf: data.cpf,
-                    password: generateHashMd5(data.password)
+                    password: data.password
                 }
             })
         } catch (error) {
+            console.log(error)
             throw new HttpException("error new user", HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
