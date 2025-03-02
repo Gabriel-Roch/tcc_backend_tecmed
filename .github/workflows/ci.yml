@@ -15,7 +15,7 @@ jobs:
       - name: Trigger Jenkins Job
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'http://191.101.78.132:8080/job/backend_tecmed/build/WithParameters?token=${{ secrets.JENKINS_TOKEN }}'
+          url: 'http://rochacorporation.com.br:8080/job/backend_tecmed/build/WithParameters?token=${{ secrets.JENKINS_TOKEN }}'
           method: 'POST'
           username: ${{ secrets.JENKINS_USERNAME }}
           password: ${{ secrets.JENKINS_PASSWORD }}
