@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes } from "@nestjs/common";
 import { InewUser, IupdateUser, schemaNewUserDTO, schemaUpdateUserDTO } from "src/models/user.model";
-import { UserService } from "src/services/user.service";
-import { ZodValidationPipe } from "src/utils/zodValidation";
+import { UserService } from "../services/user.service";
+import { ZodValidationPipe } from "../utils/zodValidation";
 
 
 @Controller("/users")

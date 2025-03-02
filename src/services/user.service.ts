@@ -1,13 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { PrismaClient, user } from "@prisma/client";
-import { InewUser, IupdateUser } from "src/models/user.model";
-import { generateHashMd5 } from "src/utils/passwordCrypto";
+import {  user } from "@prisma/client";
+import { InewUser, IupdateUser } from "../models/user.model";
+import { generateHashMd5 } from "../utils/passwordCrypto";
+import { PrismaService } from "./prisma.service";
 
 
 @Injectable()
 export class UserService {
 
-    constructor(private prisma: PrismaClient) { }
+    constructor(private prisma: PrismaService) { }
 
     async getAllUsers(): Promise<user[]> {
         try {
