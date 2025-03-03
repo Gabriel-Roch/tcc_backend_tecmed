@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes } from "@nestjs/common";
 import { InewUser, IupdateUser, schemaNewUserDTO, schemaUpdateUserDTO } from "src/models/user.model";
-import { UserService } from "../services/user.service";
-import { ZodValidationPipe } from "../utils/zodValidation";
+import { UserService } from "../../services/user/user.service";
+import { ZodValidationPipe } from "../../utils/zodValidation";
 
 
 @Controller("/users")
@@ -14,7 +14,7 @@ export class UserController {
         try {
             return await this.userService.getAllUsers()
         } catch (error) {
-            return error
+            throw error
         }
     }
 
@@ -23,7 +23,7 @@ export class UserController {
         try {
             return await this.userService.deleteUserById(id)
         } catch (error) {
-            return error
+            throw error
         }
     }
 
@@ -33,7 +33,7 @@ export class UserController {
         try {
             await this.userService.newUser(data)
         } catch (error) {
-            return error
+            throw error
         }
     }
 
@@ -43,16 +43,16 @@ export class UserController {
         try {
             await this.userService.updateUser(data)
         } catch (error) {
-            return error
+            throw error
         }
     }
 
     @Delete(':id')
-    async deleteById(@Param('id') id : number) {
+    async deleteById(@Param('id') id: number) {
         try {
             await this.userService.deleteUserById(id)
         } catch (error) {
-            return error
+            throw error
         }
     }
 

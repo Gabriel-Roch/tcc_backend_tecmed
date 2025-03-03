@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { master_blood } from '@prisma/client';
-import { MasterBloodService } from '../services/masterBlood.service';
+import { MasterBloodService } from '../../services/masterBlood/masterBlood.service';
 
 @Controller("/master/blood")
 export class BloodController {
@@ -12,7 +12,7 @@ export class BloodController {
         try {
             return await this.masterBloodService.getAll()
         } catch (error) {
-            return error
+            throw error
         }
     }
 

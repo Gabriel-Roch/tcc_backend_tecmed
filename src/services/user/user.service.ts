@@ -1,8 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { BadRequestException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { user } from "@prisma/client";
-import { InewUser, IupdateUser } from "../models/user.model";
-import { generateHashMd5 } from "../utils/passwordCrypto";
-import { PrismaService } from "./prisma.service";
+import { InewUser, IupdateUser } from "../../models/user.model";
+import { generateHashMd5 } from "../../utils/passwordCrypto";
+import { PrismaService } from "../prisma/prisma.service";
 
 
 @Injectable()
@@ -20,16 +20,28 @@ export class UserService {
 
     async newUser(data: InewUser): Promise<void> {
         try {
+            let existingUser = await this.prisma.user.count({
+                where: {
+                    cpf: data.cpf
+                }
+            })
+
+            if (existingUser) {
+                throw new BadRequestException("Cpf Ja utilizado")
+            }
 
             await this.prisma.user.create({
                 data: {
+                    username: data.username,
                     u_name: data.name,
                     cpf: data.cpf,
-                    password: data.password
+                    password: generateHashMd5(data.password)
                 }
             })
         } catch (error) {
-            console.log(error)
+            if (error instanceof BadRequestException) {
+                throw error
+            }
             throw new HttpException("error new user", HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
@@ -39,7 +51,7 @@ export class UserService {
 
             const user = await this.prisma.user.count({
                 where: {
-                    id_u: idUser
+                    id_u: Number(idUser)
                 }
             })
 
@@ -49,7 +61,7 @@ export class UserService {
 
             await this.prisma.user.deleteMany({
                 where: {
-                    id_u: idUser
+                    id_u: Number(idUser)
                 }
             })
         } catch (error) {
@@ -96,5 +108,18 @@ export class UserService {
             throw new HttpException("getr user by id", HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
+
+    async findOne(username: string): Promise<user | null> {
+        try {
+            return await this.prisma.user.findUnique({
+                where: {
+                    username: username
+                }
+            });
+        } catch (error) {
+            throw new HttpException(`Error finding user: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }

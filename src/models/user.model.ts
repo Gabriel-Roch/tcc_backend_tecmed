@@ -2,6 +2,7 @@ import { z } from "zod"
 
 export const schemaNewUserDTO = z.object({
     name: z.string(),
+    username : z.string(),
     cpf: z.string(),
     password: z.string()
 })
