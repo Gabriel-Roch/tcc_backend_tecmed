@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { newPatientDTO } from "src/models/patient.model";
 import { randomUUID } from "node:crypto";
-import { message } from "src/utils/messages";
 
 @Injectable()
 export class PatientService {
@@ -11,15 +10,26 @@ export class PatientService {
     async newPatient(data: newPatientDTO) {
         try {
 
-            const patient = await this.prisma.patients.count({
+            const cpfExisting = await this.prisma.patients.count({
                 where: {
                     cpf: data.cpf
                 }
             })
 
-            if (patient) {
-                throw new HttpException(message.patient.error.cpf_already_used, HttpStatus.BAD_REQUEST)
+            if (cpfExisting) {
+                throw new HttpException("CPF ja utilizado", HttpStatus.BAD_REQUEST)
             }
+
+            const rgExisting = await this.prisma.patients.count({
+                where: {
+                    rg: data.rg
+                }
+            })
+
+            if (rgExisting) {
+                throw new HttpException("RG ja utilizado", HttpStatus.BAD_REQUEST)
+            }
+
 
             const UUID = randomUUID()
             await this.prisma.$transaction([
@@ -33,6 +43,7 @@ export class PatientService {
                         fk_medical_agreement: data.medical_agreement,
                         fk_type_blood: data.type_blood,
                         rg: data.rg,
+                        birth: new Date(data.birth),
                         sex: data.sex,
                         medical_agreement_number: data.medical_agreement_number,
                         fk_insert_user: 1
@@ -67,10 +78,11 @@ export class PatientService {
             ])
 
         } catch (error) {
+            console.log(error)
             if (error instanceof HttpException) {
                 throw error;
             }
-            throw new HttpException(message.patient.error.when_registering_patient, HttpStatus.INTERNAL_SERVER_ERROR)
+            throw new HttpException("Error ao cadastrar paciente", HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
 

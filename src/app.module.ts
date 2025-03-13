@@ -8,6 +8,8 @@ import { IndexController } from './controller/index/index.controller';
 import { UserController } from './controller/user/user.controller';
 import { UserService } from './services/user/user.service';
 import { AuthModule } from './module/auth/auth.module';
+import { AgreementController } from './controller/agreement/agreement.controller';
+import { AgreementService } from './services/agreement/agreement.service';
 
 
 @Module({
@@ -16,13 +18,15 @@ import { AuthModule } from './module/auth/auth.module';
     BloodController,
     PatientController,
     IndexController,
-    UserController
+    UserController,
+    AgreementController
   ],
   providers: [
     MasterBloodService,
     PrismaService,
     PatientService,
-    UserService
+    UserService,
+    AgreementService
   ],
 })
 export class AppModule { }

@@ -13,7 +13,12 @@ export class PatientController {
     @UseGuards(AuthGuard)
     @UsePipes(new ZodValidationPipe(schemaNewPatientsDTO))
     async newPatient(@Body() data: newPatientDTO) {
-        await this.patientService.newPatient(data)
+        try {
+            await this.patientService.newPatient(data)
+            return {message : "paciente cadastrado!"}
+        } catch (error) {
+            throw error
+        }
     }
 
 }
