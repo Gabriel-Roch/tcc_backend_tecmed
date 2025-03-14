@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { newPatientDTO } from "src/models/patient.model";
 import { randomUUID } from "node:crypto";
+import { newPatientDTO } from "../../models/patient.model";
 
 @Injectable()
 export class PatientService {

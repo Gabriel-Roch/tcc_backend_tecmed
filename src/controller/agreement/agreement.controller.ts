@@ -1,5 +1,6 @@
 import { Controller, Get } from "@nestjs/common";
-import { AgreementService } from "src/services/agreement/agreement.service";
+import { AgreementService } from "../../services/agreement/agreement.service";
+
 
 
 
