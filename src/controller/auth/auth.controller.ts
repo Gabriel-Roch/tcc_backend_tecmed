@@ -1,6 +1,6 @@
 import { Body, Controller, Post, UsePipes } from "@nestjs/common";
 import { AuthService } from "../../services/auth/auth.service";
-import { IschemaAuthLoginDTO, schemAuthLoginDTO } from "../../models/auth.model";
+import { IschemaAuthLoginDTO, schemAuthLoginDTO } from "./auth.type";
 import { ZodValidationPipe } from "../../utils/zodValidation";
 
 

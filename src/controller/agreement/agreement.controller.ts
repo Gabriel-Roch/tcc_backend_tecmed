@@ -1,9 +1,6 @@
 import { Controller, Get } from "@nestjs/common";
 import { AgreementService } from "../../services/agreement/agreement.service";
 
-
-
-
 @Controller("/master/agreement")
 export class AgreementController {
 

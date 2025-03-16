@@ -41,6 +41,7 @@ model medicine_manufacturer {
   user_medicine_manufacturer_fk_last_update_userTouser user?               @relation("medicine_manufacturer_fk_last_update_userTouser", fields: [fk_last_update_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medicine_manufacturer_ibfk_2")
   medicine_products                                    medicine_products[]
 
+  @@unique([cnpj, m_name], map: "unique_cnpj_name")
   @@index([fk_insert_user], map: "fk_insert_user")
   @@index([fk_last_update_user], map: "fk_last_update_user")
 }

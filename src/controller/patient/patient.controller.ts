@@ -1,8 +1,8 @@
 import { Body, Controller, Post, UseGuards, UsePipes } from "@nestjs/common";
-import { PatientService } from "../../services/patient/patient.service";
 import { ZodValidationPipe } from "../../utils/zodValidation";
 import { AuthGuard } from "../../services/auth/authGuard.service";
-import { newPatientDTO, schemaNewPatientsDTO } from "../../models/patient.model";
+import { newPatientDTO, schemaNewPatientsDTO } from "../../services/patient/patient.type";
+import { PatientService } from "../../services/patient/patient.service";
 
 @Controller("/patient")
 export class PatientController {

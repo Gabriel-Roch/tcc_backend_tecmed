@@ -3,7 +3,7 @@ import { UserService } from "../../services/user/user.service";
 import { ZodValidationPipe } from "../../utils/zodValidation";
 import { Request } from "express";
 import { AuthGuard } from "../../services/auth/authGuard.service";
-import { InewUser, schemaNewUserDTO } from "../../models/user.model";
+import { InewUser, IupdateUser, schemaNewUserDTO, schemaUpdateUserDTO } from "../../services/user/user.type";
 
 @Controller("/users")
 export class UserController {
@@ -33,7 +33,7 @@ export class UserController {
     }
 
     @Post()
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @UsePipes(new ZodValidationPipe(schemaNewUserDTO))
     async newUser(@Body() data: InewUser) {
         try {

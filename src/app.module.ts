@@ -10,6 +10,9 @@ import { UserService } from './services/user/user.service';
 import { AuthModule } from './module/auth/auth.module';
 import { AgreementController } from './controller/agreement/agreement.controller';
 import { AgreementService } from './services/agreement/agreement.service';
+import { MedicineManufacturerController } from './controller/medicine_manufacturer/medicine_manufacturer.controller';
+import { MedicineManufacturerService } from './services/medicine_manufacturer/medicine_manufacturer.service';
+import { MedicineProductsService } from './services/medicine_products/medicine_products.service';
 
 
 @Module({
@@ -19,14 +22,17 @@ import { AgreementService } from './services/agreement/agreement.service';
     PatientController,
     IndexController,
     UserController,
-    AgreementController
+    AgreementController,
+    MedicineManufacturerController
   ],
   providers: [
     MasterBloodService,
     PrismaService,
     PatientService,
     UserService,
-    AgreementService
+    AgreementService,
+    MedicineManufacturerService,
+    MedicineProductsService
   ],
 })
 export class AppModule { }

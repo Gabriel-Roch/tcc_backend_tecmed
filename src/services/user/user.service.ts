@@ -1,6 +1,6 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { user } from "@prisma/client";
-import { InewUser, IupdateUser } from "../../models/user.model";
+import { InewUser, IupdateUser } from "./user.type";
 import { generateHashMd5 } from "../../utils/passwordCrypto";
 import { PrismaService } from "../prisma/prisma.service";
 
