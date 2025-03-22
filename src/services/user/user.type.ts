@@ -8,7 +8,7 @@ export const schemaNewUserDTO = z.object({
 })
 
 export const schemaUpdateUserDTO = schemaNewUserDTO.extend({
-    id: z.number()
+    id: z.string()
 })
 
 export type InewUser = z.infer<typeof schemaNewUserDTO>

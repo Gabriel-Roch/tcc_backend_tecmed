@@ -46,12 +46,12 @@ export class UserService {
         }
     }
 
-    async deleteUserById(idUser: number): Promise<void> {
+    async deleteUserById(idUser: string): Promise<void> {
         try {
 
             const user = await this.prisma.user.count({
                 where: {
-                    id_u: Number(idUser)
+                    id_u: idUser
                 }
             })
 
@@ -61,7 +61,7 @@ export class UserService {
 
             await this.prisma.user.deleteMany({
                 where: {
-                    id_u: Number(idUser)
+                    id_u: idUser
                 }
             })
         } catch (error) {
@@ -96,7 +96,7 @@ export class UserService {
         }
     }
 
-    async getUserById(idUser: number): Promise<user> {
+    async getUserById(idUser: string): Promise<user> {
         try {
             const user = await this.prisma.user.findMany({
                 where: {

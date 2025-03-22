@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { newManufacturerDTO } from './medicine_manufacturer.model';
+import { newManufacturerDTO } from './medicine_manufacturer.type';
 
 @Injectable()
 export class MedicineManufacturerService {

@@ -1,13 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { randomUUID } from "node:crypto";
-import { newPatientDTO } from "./patient.type";
+import { InewPatient } from "./patient.type";
+
 
 @Injectable()
 export class PatientService {
     constructor(private prisma: PrismaService) { }
 
-    async newPatient(data: newPatientDTO) {
+    async newPatient(data: InewPatient) {
         try {
 
             const cpfExisting = await this.prisma.patients.count({
@@ -46,7 +47,7 @@ export class PatientService {
                         birth: new Date(data.birth),
                         sex: data.sex,
                         medical_agreement_number: data.medical_agreement_number,
-                        fk_insert_user: 1
+                        fk_insert_user: data.id_insert_user
                     }
                 }),
 

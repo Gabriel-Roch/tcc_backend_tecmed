@@ -17,8 +17,8 @@ model master_blood {
 model medical_agreement {
   id_ma                                            Int        @id
   ma_name                                          String?    @db.VarChar(120)
-  fk_insert_user                                   String     @db.VarChar(36)
-  fk_last_update_user                              String?    @db.VarChar(36)
+  fk_insert_user                                   Int
+  fk_last_update_user                              Int?
   last_date_update                                 DateTime?  @db.Timestamp(0)
   dt_create                                        DateTime?  @default(now()) @db.Timestamp(0)
   user_medical_agreement_fk_insert_userTouser      user       @relation("medical_agreement_fk_insert_userTouser", fields: [fk_insert_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medical_agreement_ibfk_1")
@@ -33,9 +33,9 @@ model medicine_manufacturer {
   id_mm                                                Int                 @id @default(autoincrement())
   m_name                                               String              @db.VarChar(120)
   cnpj                                                 String?             @db.VarChar(30)
-  fk_insert_user                                       String              @db.VarChar(36)
+  fk_insert_user                                       Int
   dt_create                                            DateTime?           @default(now()) @db.Timestamp(0)
-  fk_last_update_user                                  String?             @db.VarChar(36)
+  fk_last_update_user                                  Int?
   dt_last_update                                       DateTime?           @db.Timestamp(0)
   user_medicine_manufacturer_fk_insert_userTouser      user                @relation("medicine_manufacturer_fk_insert_userTouser", fields: [fk_insert_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medicine_manufacturer_ibfk_1")
   user_medicine_manufacturer_fk_last_update_userTouser user?               @relation("medicine_manufacturer_fk_last_update_userTouser", fields: [fk_last_update_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medicine_manufacturer_ibfk_2")
@@ -56,9 +56,9 @@ model medicine_products {
   reserved_stock                              Int
   min_stock_level                             Int
   fk_medicine_manufacturer                    Int
-  fk_insert_user                              String                                          @db.VarChar(36)
+  fk_insert_user                              Int
   dt_create                                   DateTime?                                       @default(now()) @db.Timestamp(0)
-  fk_update_user                              String                                          @db.VarChar(36)
+  fk_update_user                              Int
   dt_last_update                              DateTime?                                       @db.Timestamp(0)
   medicine_manufacturer                       medicine_manufacturer                           @relation(fields: [fk_medicine_manufacturer], references: [id_mm], onDelete: NoAction, onUpdate: NoAction, map: "medicine_products_ibfk_1")
   user_medicine_products_fk_insert_userTouser user                                            @relation("medicine_products_fk_insert_userTouser", fields: [fk_insert_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medicine_products_ibfk_2")
@@ -74,7 +74,7 @@ model medicine_products {
 model moving_products {
   id_mov                 Int                      @id @default(autoincrement())
   fk_id_product          Int
-  fk_requester_id_user   String                   @db.VarChar(36)
+  fk_requester_id_user   Int
   fk_destination_patient String                   @db.VarChar(36)
   qty                    Decimal                  @db.Decimal(10, 3)
   type                   moving_products__type?   @map("_type")
@@ -98,8 +98,8 @@ model patients {
   birth                                   DateTime             @db.Date
   fk_type_blood                           Int?
   fk_medical_agreement                    Int?
-  fk_insert_user                          String               @db.VarChar(36)
-  fk_last_update_user                     String?              @db.VarChar(36)
+  fk_insert_user                          Int
+  fk_last_update_user                     Int?
   medical_agreement_number                String?              @db.VarChar(45)
   last_date_update                        DateTime?            @db.Timestamp(0)
   dt_create                               DateTime?            @default(now()) @db.Timestamp(0)
@@ -143,7 +143,7 @@ model patients_telephone {
 }
 
 model user {
-  id_u                                                                  String                  @id @default(uuid()) @db.VarChar(36)
+  id_u                                                                  Int                     @id @default(autoincrement())
   u_name                                                                String                  @db.VarChar(120)
   cpf                                                                   String                  @unique(map: "cpf") @db.VarChar(11)
   password                                                              String                  @db.VarChar(80)

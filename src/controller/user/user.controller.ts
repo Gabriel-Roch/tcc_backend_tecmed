@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards, UseP
 import { UserService } from "../../services/user/user.service";
 import { ZodValidationPipe } from "../../utils/zodValidation";
 import { Request } from "express";
-import { AuthGuard } from "../../services/auth/authGuard.service";
+import { AuthGuard } from "../../services/auth/auth.guard";
 import { InewUser, IupdateUser, schemaNewUserDTO, schemaUpdateUserDTO } from "../../services/user/user.type";
 
 @Controller("/users")
@@ -12,7 +12,7 @@ export class UserController {
 
     @Get()
     @UseGuards(AuthGuard)
-    async getAll(@Req() req : Request) {
+    async getAll(@Req() req: Request) {
         try {
             const user = req['user']
             console.log(user)
@@ -24,7 +24,7 @@ export class UserController {
 
     @Get(':id')
     @UseGuards(AuthGuard)
-    async getByID(@Param('id') id: number) {
+    async getByID(@Param('id') id: string) {
         try {
             return await this.userService.deleteUserById(id)
         } catch (error) {
@@ -33,7 +33,6 @@ export class UserController {
     }
 
     @Post()
-    // @UseGuards(AuthGuard)
     @UsePipes(new ZodValidationPipe(schemaNewUserDTO))
     async newUser(@Body() data: InewUser) {
         try {
@@ -56,15 +55,12 @@ export class UserController {
 
     @Delete(':id')
     @UseGuards(AuthGuard)
-    async deleteById(@Param('id') id: number) {
+    async deleteById(@Param('id') id: string) {
         try {
             await this.userService.deleteUserById(id)
         } catch (error) {
             throw error
         }
     }
-
-
-
 
 }

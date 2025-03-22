@@ -13,6 +13,7 @@ import { AgreementService } from './services/agreement/agreement.service';
 import { MedicineManufacturerController } from './controller/medicine_manufacturer/medicine_manufacturer.controller';
 import { MedicineManufacturerService } from './services/medicine_manufacturer/medicine_manufacturer.service';
 import { MedicineProductsService } from './services/medicine_products/medicine_products.service';
+import { MedicineProductController } from './controller/medicine-product/medicine-product.controller';
 
 
 @Module({
@@ -23,7 +24,8 @@ import { MedicineProductsService } from './services/medicine_products/medicine_p
     IndexController,
     UserController,
     AgreementController,
-    MedicineManufacturerController
+    MedicineManufacturerController,
+    MedicineProductController
   ],
   providers: [
     MasterBloodService,

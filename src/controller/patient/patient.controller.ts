@@ -1,8 +1,11 @@
-import { Body, Controller, Post, UseGuards, UsePipes } from "@nestjs/common";
+import { Body, Controller, Post, Req, UseGuards, UsePipes } from "@nestjs/common";
 import { ZodValidationPipe } from "../../utils/zodValidation";
-import { AuthGuard } from "../../services/auth/authGuard.service";
-import { newPatientDTO, schemaNewPatientsDTO } from "../../services/patient/patient.type";
+import { AuthGuard } from "../../services/auth/auth.guard";
 import { PatientService } from "../../services/patient/patient.service";
+import { Request } from "express";
+import { schemaNewPatientsDTO } from "./patient.type";
+import { z } from "zod";
+import { getUserInfo } from "../../utils/getUser";
 
 @Controller("/patient")
 export class PatientController {
@@ -12,10 +15,13 @@ export class PatientController {
     @Post()
     @UseGuards(AuthGuard)
     @UsePipes(new ZodValidationPipe(schemaNewPatientsDTO))
-    async newPatient(@Body() data: newPatientDTO) {
+    async newPatient(@Req() req: Request, @Body() data: z.infer<typeof schemaNewPatientsDTO>) {
         try {
-            await this.patientService.newPatient(data)
-            return {message : "paciente cadastrado!"}
+            const { userId } = getUserInfo(req)
+            await this.patientService.newPatient(Object.assign(data, {
+                id_insert_user: userId
+            }))
+            return { message: "paciente cadastrado!" }
         } catch (error) {
             throw error
         }
