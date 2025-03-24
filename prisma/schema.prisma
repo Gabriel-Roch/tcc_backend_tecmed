@@ -58,11 +58,11 @@ model medicine_products {
   fk_medicine_manufacturer                    Int
   fk_insert_user                              String                                          @db.VarChar(36)
   dt_create                                   DateTime?                                       @default(now()) @db.Timestamp(0)
-  fk_update_user                              String                                          @db.VarChar(36)
+  fk_update_user                              String?                                         @db.VarChar(36)
   dt_last_update                              DateTime?                                       @db.Timestamp(0)
   medicine_manufacturer                       medicine_manufacturer                           @relation(fields: [fk_medicine_manufacturer], references: [id_mm], onDelete: NoAction, onUpdate: NoAction, map: "medicine_products_ibfk_1")
   user_medicine_products_fk_insert_userTouser user                                            @relation("medicine_products_fk_insert_userTouser", fields: [fk_insert_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medicine_products_ibfk_2")
-  user_medicine_products_fk_update_userTouser user                                            @relation("medicine_products_fk_update_userTouser", fields: [fk_update_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medicine_products_ibfk_3")
+  user_medicine_products_fk_update_userTouser user?                                           @relation("medicine_products_fk_update_userTouser", fields: [fk_update_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "medicine_products_ibfk_3")
   moving_products                             moving_products[]
 
   @@unique([mp_name, fk_medicine_manufacturer, distribution_unit_of_measure], map: "mp_name")

@@ -3,8 +3,6 @@ import { AuthService } from "../../services/auth/auth.service";
 import { IschemaAuthLoginDTO, schemAuthLoginDTO } from "./auth.type";
 import { ZodValidationPipe } from "../../utils/zodValidation";
 
-
-
 @Controller("auth")
 export class AuthController {
 

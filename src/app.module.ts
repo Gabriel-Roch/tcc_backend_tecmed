@@ -12,9 +12,8 @@ import { AgreementController } from './controller/agreement/agreement.controller
 import { AgreementService } from './services/agreement/agreement.service';
 import { MedicineManufacturerController } from './controller/medicine_manufacturer/medicine_manufacturer.controller';
 import { MedicineManufacturerService } from './services/medicine_manufacturer/medicine_manufacturer.service';
-import { MedicineProductsService } from './services/medicine_products/medicine_products.service';
+import { MedicineProductService } from './services/medicine_products/medicine_products.service';
 import { MedicineProductController } from './controller/medicine-product/medicine-product.controller';
-
 
 @Module({
   imports: [AuthModule],
@@ -34,7 +33,7 @@ import { MedicineProductController } from './controller/medicine-product/medicin
     UserService,
     AgreementService,
     MedicineManufacturerService,
-    MedicineProductsService
+    MedicineProductService
   ],
 })
 export class AppModule { }
