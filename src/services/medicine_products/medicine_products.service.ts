@@ -11,6 +11,7 @@ export class MedicineProductService {
     async getAll() {
         try {
             return await this.prismaService.$queryRaw<Promise<IgetAll[]>>`SELECT 
+            mp.id_mp,
             mp.mp_name,
             mp.category,
             mp.distribution_unit_of_measure,
@@ -41,7 +42,7 @@ export class MedicineProductService {
                     distribution_unit_of_measure: data.distribution_unit_of_measure,
                     quantity_per_measure: data.quantity_per_measure,
                     current_stock: data.current_stock,
-                    reserved_stock: data.reserved_stock,
+                    reserved_stock: 0,
                     min_stock_level: data.min_stock_level,
                     fk_medicine_manufacturer: data.fk_medicine_manufacturer,
                     fk_insert_user: data.fk_insert_user,

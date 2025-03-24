@@ -31,6 +31,7 @@ export class MedicineProductController {
             await this.medicineProductService.create(Object.assign(data, {
                 fk_insert_user: userId
             }))
+            return { message: "success!" }
         } catch (error) {
             throw error
         }

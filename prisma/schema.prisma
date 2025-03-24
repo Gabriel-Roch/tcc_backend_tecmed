@@ -34,6 +34,7 @@ model medicine_manufacturer {
   m_name                                               String              @db.VarChar(120)
   cnpj                                                 String?             @db.VarChar(30)
   fk_insert_user                                       String              @db.VarChar(36)
+  status                                               Boolean?            @default(true) @map("_status")
   dt_create                                            DateTime?           @default(now()) @db.Timestamp(0)
   fk_last_update_user                                  String?             @db.VarChar(36)
   dt_last_update                                       DateTime?           @db.Timestamp(0)

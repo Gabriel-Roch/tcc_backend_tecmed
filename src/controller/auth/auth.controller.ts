@@ -12,8 +12,7 @@ export class AuthController {
     @UsePipes(new ZodValidationPipe(schemAuthLoginDTO))
     async login(@Body() data: IschemaAuthLoginDTO) {
         try {
-            const token = await this.authService.signIn(data.username, data.password)
-            return token
+            return await this.authService.signIn(data.username, data.password)
         } catch (error) {
             throw error
         }
