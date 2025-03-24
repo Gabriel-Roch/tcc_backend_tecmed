@@ -8,12 +8,13 @@ export class AuthController {
 
     constructor(private authService: AuthService) { }
 
-    @Post("/login")
+    @Post("login")
     @UsePipes(new ZodValidationPipe(schemAuthLoginDTO))
     async login(@Body() data: IschemaAuthLoginDTO) {
         try {
             return await this.authService.signIn(data.username, data.password)
         } catch (error) {
+            console.log(error)
             throw error
         }
     }

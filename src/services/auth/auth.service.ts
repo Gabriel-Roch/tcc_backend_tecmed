@@ -12,13 +12,13 @@ export class AuthService {
         private jwtService: JwtService
     ) { }
 
-    async signIn(usernamee: string, password: string): Promise<{ access_token: string }> {
+    async signIn(username: string, password: string): Promise<{ access_token: string }> {
         try {
-            if (usernamee === undefined) {
+            if (username === undefined) {
                 throw new UnauthorizedException();
             }
 
-            const user = await this.userService.findOne(usernamee)
+            const user = await this.userService.findOne(username)
 
             if (user === null) {
                 throw new UnauthorizedException()
@@ -37,7 +37,7 @@ export class AuthService {
             if (error instanceof UnauthorizedException) {
                 throw error
             }
-            throw new HttpException("error Login", HttpStatus.INTERNAL_SERVER_ERROR)
+            throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
         }
 
     }
