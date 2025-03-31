@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards, UsePipes } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UseGuards, UsePipes } from "@nestjs/common";
 import { ZodValidationPipe } from "../../utils/zodValidation";
 import { AuthGuard } from "../../services/auth/auth.guard";
 import { PatientService } from "../../services/patient/patient.service";
@@ -11,6 +11,16 @@ import { getUserInfo } from "../../utils/getUser";
 export class PatientController {
 
     constructor(private readonly patientService: PatientService) { }
+
+    @Get()
+    @UseGuards(AuthGuard)
+    async getAllPatient() {
+        try {
+            return await this.patientService.getAllPatient()
+        } catch (error) {
+            throw error
+        }
+    }
 
     @Post()
     @UseGuards(AuthGuard)

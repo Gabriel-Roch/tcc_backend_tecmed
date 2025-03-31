@@ -6,7 +6,7 @@ export interface InewPatient {
     cpf: string,
     rg: string,
     birth: string,
-    type_blood: number | null
+    type_blood?: number | null
     medical_agreement: number | null
     medical_agreement_number: string | null
     telephones: Array<{
@@ -16,7 +16,7 @@ export interface InewPatient {
     address: {
         zip_code: string
         street: string
-        complement: string
+        complement?: string | null
         unit: string
         neighborhood: string
         city: string

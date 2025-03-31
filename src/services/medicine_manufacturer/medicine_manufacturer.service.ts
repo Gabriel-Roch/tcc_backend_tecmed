@@ -26,7 +26,8 @@ export class MedicineManufacturerService {
             return await this.prisma.medicine_manufacturer.findMany({
                 select: {
                     id_mm: true,
-                    m_name: true
+                    m_name: true,
+                    cnpj: true
                 },
                 where: {
                     status: true

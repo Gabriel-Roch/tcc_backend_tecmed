@@ -15,7 +15,6 @@ export class UserController {
     async getAll(@Req() req: Request) {
         try {
             const user = req['user']
-            console.log(user)
             return await this.userService.getAllUsers()
         } catch (error) {
             throw error

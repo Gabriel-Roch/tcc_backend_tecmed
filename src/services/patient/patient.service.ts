@@ -1,11 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { randomUUID } from "node:crypto";
 import { InewPatient } from "./patient.type";
 
-
 @Injectable()
 export class PatientService {
+
     constructor(private prisma: PrismaService) { }
 
     async newPatient(data: InewPatient) {
@@ -18,7 +18,7 @@ export class PatientService {
             })
 
             if (cpfExisting) {
-                throw new HttpException("CPF ja utilizado", HttpStatus.BAD_REQUEST)
+                throw new BadRequestException("CPF ja utilizado")
             }
 
             const rgExisting = await this.prisma.patients.count({
@@ -28,7 +28,7 @@ export class PatientService {
             })
 
             if (rgExisting) {
-                throw new HttpException("RG ja utilizado", HttpStatus.BAD_REQUEST)
+                throw new BadRequestException("RG ja utilizado")
             }
 
 
@@ -79,11 +79,25 @@ export class PatientService {
             ])
 
         } catch (error) {
-            console.log(error)
-            if (error instanceof HttpException) {
+            if (error instanceof BadRequestException) {
                 throw error;
             }
-            throw new HttpException("Error ao cadastrar paciente", HttpStatus.INTERNAL_SERVER_ERROR)
+            throw new InternalServerErrorException(error)
+        }
+    }
+
+    async getAllPatient() {
+        try {
+            return await this.prisma.patients.findMany({
+                include: {
+                    master_blood: true,
+                    medical_agreement: true,
+                    patients_telephone: true,
+                    patients_address: true
+                }
+            })
+        } catch (error) {
+            throw new InternalServerErrorException(error)
         }
     }
 

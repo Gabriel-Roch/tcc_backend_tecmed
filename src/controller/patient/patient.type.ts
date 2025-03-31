@@ -8,7 +8,7 @@ export const schemaNewPatientsDTO = z.object({
     cpf: z.string(),
     rg: z.string(),
     birth : z.string(),
-    type_blood: z.number().or(z.null()),
+    type_blood: z.number().or(z.null()).optional(),
     medical_agreement: z.number().or(z.null()),
     medical_agreement_number: z.string().or(z.null()),
     telephones: z.array(
@@ -20,7 +20,7 @@ export const schemaNewPatientsDTO = z.object({
     address: z.object({
         zip_code: z.string(),
         street: z.string(),
-        complement: z.string(),
+        complement: z.string().or(z.null()).optional(),
         unit: z.string(),
         neighborhood: z.string(),
         city: z.string(),

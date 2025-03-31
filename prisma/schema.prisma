@@ -17,6 +17,10 @@ model master_blood {
 model medical_agreement {
   id_ma                                            Int        @id
   ma_name                                          String?    @db.VarChar(120)
+  cnpj                                             String?    @db.VarChar(45)
+  active                                           Boolean    @default(true) @map("_active")
+  contact                                          String?    @db.VarChar(45)
+  remark                                           String     @db.VarChar(255)
   fk_insert_user                                   String     @db.VarChar(36)
   fk_last_update_user                              String?    @db.VarChar(36)
   last_date_update                                 DateTime?  @db.Timestamp(0)

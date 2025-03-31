@@ -1,7 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { medical_agreement } from "@prisma/client";
-
+import { ICreateAgreemnet } from "./agreement.type";
 
 @Injectable()
 export class AgreementService {
@@ -12,7 +12,36 @@ export class AgreementService {
         try {
             return await this.prisma.medical_agreement.findMany()
         } catch (error) {
-            throw new HttpException("GET ALL agreement", HttpStatus.INTERNAL_SERVER_ERROR)
+            throw new InternalServerErrorException("GET ALL agreement")
+        }
+    }
+
+    async create(data: ICreateAgreemnet) {
+        try {
+
+            const lastMedicalAgreement = await this.prisma.medical_agreement.findFirst({
+                orderBy: {
+                    id_ma: 'desc',
+                },
+                select: {
+                    id_ma: true,
+                },
+            });
+
+            const nextId = lastMedicalAgreement ? lastMedicalAgreement.id_ma + 1 : 1;
+
+            return await this.prisma.medical_agreement.create({
+                data: {
+                    id_ma: nextId,
+                    ma_name: data.ma_name,
+                    cnpj: data.cnpj,
+                    contact: data.contact,
+                    remark: data.remark,
+                    fk_insert_user: data.fk_insert_user,
+                }
+            })
+        } catch (error) {
+            throw new InternalServerErrorException(error)
         }
     }
 

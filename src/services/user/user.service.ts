@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { user } from "@prisma/client";
 import { InewUser, IupdateUser } from "./user.type";
 import { generateHashMd5 } from "../../utils/passwordCrypto";
@@ -14,7 +14,7 @@ export class UserService {
         try {
             return await this.prisma.user.findMany()
         } catch (error) {
-            throw new HttpException("GET BLOOD", HttpStatus.INTERNAL_SERVER_ERROR)
+            throw new InternalServerErrorException("GET BLOOD")
         }
     }
 
@@ -42,7 +42,7 @@ export class UserService {
             if (error instanceof BadRequestException) {
                 throw error
             }
-            throw new HttpException("error new user", HttpStatus.INTERNAL_SERVER_ERROR)
+            throw new InternalServerErrorException("error new user")
         }
     }
 
@@ -56,7 +56,7 @@ export class UserService {
             })
 
             if (user === 0) {
-                throw new HttpException("Usuario não encontrado", HttpStatus.BAD_REQUEST)
+                throw new BadRequestException("Usuario não encontrado")
             }
 
             await this.prisma.user.deleteMany({
@@ -65,7 +65,10 @@ export class UserService {
                 }
             })
         } catch (error) {
-            throw new HttpException("error delete user", HttpStatus.INTERNAL_SERVER_ERROR)
+            if (error instanceof BadRequestException) {
+                throw error
+            }
+            throw new InternalServerErrorException("error delete user")
         }
     }
 
@@ -79,7 +82,7 @@ export class UserService {
             })
 
             if (user === 0) {
-                throw new HttpException("GET BLOOD", HttpStatus.INTERNAL_SERVER_ERROR)
+                throw new BadRequestException("user Not found")
             }
 
             await this.prisma.user.update({
@@ -92,7 +95,10 @@ export class UserService {
                 }
             })
         } catch (error) {
-            throw new HttpException("error update user", HttpStatus.INTERNAL_SERVER_ERROR)
+            if (error instanceof BadRequestException) {
+                throw error
+            }
+            throw new InternalServerErrorException("error update user")
         }
     }
 
@@ -105,7 +111,7 @@ export class UserService {
             })
             return user[0]
         } catch (error) {
-            throw new HttpException("getr user by id", HttpStatus.INTERNAL_SERVER_ERROR)
+            throw new InternalServerErrorException("getr user by id")
         }
     }
 
@@ -117,7 +123,7 @@ export class UserService {
                 }
             });
         } catch (error) {
-            throw new HttpException(`Error finding user: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new InternalServerErrorException(`Error finding user: ${error.message}`);
         }
     }
 
