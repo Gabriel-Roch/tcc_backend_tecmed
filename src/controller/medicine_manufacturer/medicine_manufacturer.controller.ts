@@ -12,7 +12,6 @@ export class MedicineManufacturerController {
 
     constructor(private medicine_manufacturer: MedicineManufacturerService) { }
 
-
     @Get()
     @UseGuards(AuthGuard)
     async getAllActive() {
@@ -31,11 +30,13 @@ export class MedicineManufacturerController {
             const { userId } = getUserInfo(req)
             await this.medicine_manufacturer.create({
                 m_name: data.name,
-                cnpj: data.cnpj,
+                cnpj: data.cnpj ? data.cnpj : "",
                 fk_insert_user: userId,
                 status: true
             })
+            return { message: "success" }
         } catch (error) {
+            console.log(error)
             throw error
         }
     }

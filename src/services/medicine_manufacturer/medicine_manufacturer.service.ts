@@ -17,7 +17,7 @@ export class MedicineManufacturerService {
                 }
             })
         } catch (error) {
-            throw new BadRequestException(error)
+            throw new BadRequestException("Verifique se o CNPJ Nao está em uso")
         }
     }
 
