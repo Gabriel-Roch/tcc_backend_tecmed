@@ -153,6 +153,7 @@ model user {
   cpf                                                                   String                  @unique(map: "cpf") @db.VarChar(11)
   password                                                              String                  @db.VarChar(80)
   username                                                              String                  @unique(map: "username") @db.VarChar(80)
+  rule                                                                  String                  @db.VarChar(20)
   dt_create                                                             DateTime                @default(now()) @db.Timestamp(0)
   medical_agreement_medical_agreement_fk_insert_userTouser              medical_agreement[]     @relation("medical_agreement_fk_insert_userTouser")
   medical_agreement_medical_agreement_fk_last_update_userTouser         medical_agreement[]     @relation("medical_agreement_fk_last_update_userTouser")

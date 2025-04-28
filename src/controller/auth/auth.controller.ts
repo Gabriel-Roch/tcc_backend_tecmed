@@ -14,7 +14,6 @@ export class AuthController {
         try {
             return await this.authService.signIn(data.username, data.password)
         } catch (error) {
-            console.log(error)
             throw error
         }
     }

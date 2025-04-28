@@ -35,7 +35,8 @@ export class UserService {
                     username: data.username,
                     u_name: data.name,
                     cpf: data.cpf,
-                    password: generateHashMd5(data.password)
+                    password: generateHashMd5(data.password),
+                    rule: "user"
                 }
             })
         } catch (error) {
