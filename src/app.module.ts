@@ -14,6 +14,7 @@ import { MedicineManufacturerController } from './controller/medicine_manufactur
 import { MedicineManufacturerService } from './services/medicine_manufacturer/medicine_manufacturer.service';
 import { MedicineProductService } from './services/medicine_products/medicine_products.service';
 import { MedicineProductController } from './controller/medicine-product/medicine-product.controller';
+import { TotemService } from './services/totem/totem.service';
 
 @Module({
   imports: [AuthModule],
@@ -33,7 +34,8 @@ import { MedicineProductController } from './controller/medicine-product/medicin
     UserService,
     AgreementService,
     MedicineManufacturerService,
-    MedicineProductService
+    MedicineProductService,
+    TotemService
   ],
 })
 export class AppModule { }

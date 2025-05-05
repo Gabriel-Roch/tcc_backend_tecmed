@@ -77,7 +77,7 @@ model medicine_products {
 }
 
 model moving_products {
-  id_mov                 Int                      @id @default(autoincrement())
+  id_mov                 String                   @id @db.VarChar(36)
   fk_id_product          Int
   fk_requester_id_user   String                   @db.VarChar(36)
   fk_destination_patient String                   @db.VarChar(36)

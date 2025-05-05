@@ -36,7 +36,6 @@ export class MedicineManufacturerController {
             })
             return { message: "success" }
         } catch (error) {
-            console.log(error)
             throw error
         }
     }
