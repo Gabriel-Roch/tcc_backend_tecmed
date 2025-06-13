@@ -15,6 +15,9 @@ import { MedicineManufacturerService } from './services/medicine_manufacturer/me
 import { MedicineProductService } from './services/medicine_products/medicine_products.service';
 import { MedicineProductController } from './controller/medicine-product/medicine-product.controller';
 import { TotemService } from './services/totem/totem.service';
+import { TotemController } from './controller/totem/totem.controller';
+import { AtendimentoService } from './services/atendimento/atendimento.service';
+import { AtendimentoController } from './controller/atendimento/atendimento.controller';
 
 @Module({
   imports: [AuthModule],
@@ -25,7 +28,9 @@ import { TotemService } from './services/totem/totem.service';
     UserController,
     AgreementController,
     MedicineManufacturerController,
-    MedicineProductController
+    MedicineProductController,
+    TotemController,
+    AtendimentoController
   ],
   providers: [
     MasterBloodService,
@@ -35,7 +40,8 @@ import { TotemService } from './services/totem/totem.service';
     AgreementService,
     MedicineManufacturerService,
     MedicineProductService,
-    TotemService
+    TotemService,
+    AtendimentoService
   ],
 })
 export class AppModule { }

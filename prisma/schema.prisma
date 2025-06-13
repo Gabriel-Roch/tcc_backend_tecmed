@@ -81,6 +81,7 @@ model moving_products {
   fk_id_product          Int
   fk_requester_id_user   String                   @db.VarChar(36)
   fk_destination_patient String                   @db.VarChar(36)
+  fk_service             String?                  @db.VarChar(36)
   qty                    Decimal                  @db.Decimal(10, 3)
   type                   moving_products__type?   @map("_type")
   status                 moving_products__status? @map("_status")
@@ -88,10 +89,12 @@ model moving_products {
   medicine_products      medicine_products        @relation(fields: [fk_id_product], references: [id_mp], onDelete: NoAction, onUpdate: NoAction, map: "moving_products_ibfk_1")
   user                   user                     @relation(fields: [fk_requester_id_user], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "moving_products_ibfk_2")
   patients               patients                 @relation(fields: [fk_destination_patient], references: [id_p], onDelete: NoAction, onUpdate: NoAction, map: "moving_products_ibfk_3")
+  service                service?                 @relation(fields: [fk_service], references: [id_service], onDelete: NoAction, onUpdate: NoAction, map: "moving_products_ibfk_4")
 
   @@index([fk_destination_patient], map: "fk_destination_patient")
   @@index([fk_id_product], map: "fk_id_product")
   @@index([fk_requester_id_user], map: "fk_requester_id_user")
+  @@index([fk_service], map: "fk_service")
 }
 
 model patients {
@@ -116,6 +119,7 @@ model patients {
   medical_agreement                       medical_agreement?   @relation(fields: [fk_medical_agreement], references: [id_ma], onDelete: NoAction, onUpdate: NoAction, map: "patients_ibfk_4")
   patients_address                        patients_address?
   patients_telephone                      patients_telephone[]
+  service                                 service[]
 
   @@index([fk_insert_user], map: "fk_insert_user")
   @@index([fk_last_update_user], map: "fk_last_update_user")
@@ -164,6 +168,21 @@ model user {
   moving_products                                                       moving_products[]
   patients_patients_fk_insert_userTouser                                patients[]              @relation("patients_fk_insert_userTouser")
   patients_patients_fk_last_update_userTouser                           patients[]              @relation("patients_fk_last_update_userTouser")
+  service                                                               service[]
+}
+
+model service {
+  id_service      String            @id @db.VarChar(36)
+  fk_id_patient   String?           @db.VarChar(36)
+  fk_id_medical   String?           @db.VarChar(36)
+  status          service__status?  @default(start) @map("_status")
+  dt_create       DateTime?         @default(now()) @db.Timestamp(0)
+  moving_products moving_products[]
+  patients        patients?         @relation(fields: [fk_id_patient], references: [id_p], onDelete: NoAction, onUpdate: NoAction, map: "service_ibfk_1")
+  user            user?             @relation(fields: [fk_id_medical], references: [id_u], onDelete: NoAction, onUpdate: NoAction, map: "service_ibfk_2")
+
+  @@index([fk_id_medical], map: "fk_id_medical")
+  @@index([fk_id_patient], map: "fk_id_patient")
 }
 
 enum patients_sex {
@@ -199,4 +218,10 @@ enum moving_products__status {
   pending
   success
   cancelled
+}
+
+enum service__status {
+  start
+  progress
+  finish
 }
